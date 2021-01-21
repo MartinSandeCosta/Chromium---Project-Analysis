@@ -1,0 +1,26 @@
+\chapter{Conclusions}
+\label{chap:conclusions}
+
+This assignment's main objective was contrasting all the knowledge acquired during the theoretical lectures and the invited talks to the study of a complex open source project such as Chromium. We analyzed the project's main activities from different standpoints and found a rich and wholesome community with lots of passionate contributors who never doubted to help. This ranges from clear and extense documentation, design documents, community forums to an exchange of emails or forum discussions. 
+
+Studying Chromium's development methodologies and tools we clearly observed the meticulous and precise job that requires to keep up with such a big project. Every methodology is perfectly explained and narrowed down to specific subjects in order to keep a good and steady documentation quality over all the project. 
+
+Examining Chromium's architecture it is perfectly clear how it has long held the position as the fastest web browser when it comes to everything which involves graphics. There is a few other pros and cons beyond performance which we do feel compelled to point out that this architecture achieves:
+\begin{itemize}
+    \item Chromium’s security architecture divides the browser into two protection domains, the browser kernel and the rendering engine. The sandboxed rendering engine is responsible for performing many complex, error-prone tasks, such as parsing HTML and executing JavaScript. As a result, the architecture helps protect the confidentiality and integrity of the user’s file system even if an attacker exploits an unpatched vulnerability in the rendering engine. 
+    \item Treating the rendering engine as a black box reduces the complexity of the browser kernel’s security monitor. Minimizes user security decisions avoids constant security prompts.
+    \item Aims to provide security even if an implementation has bugs. 
+\end{itemize}
+
+Analyzing the design of a project of this caliber made us ponder how major software quality is reached. It is more important to solve a problem ``smartly", i.e., that it is maintainable, reusable and readable. If a code is crammed into a particular ``shape", just to adhere to a design pattern, it will be bad code. This project shines by its software design, quality that is shared throughout the hole repository structure.
+
+We would like to thank Julie again for chatting with us and lending us some time.
+
+
+\section{Future work}
+
+Hopefully this assignment has helped demystify some of its inner workings and provided a rough guide about its underlying design. This study has shown us that we must lose our fear of addressing large projects. In addition, it has motivated us to continue researching and to consider the possibility of contributing to the project in the near future. 
+
+One of the features that we are considering to approach is our aforementioned alternative for the widely used in the project 'ifdef' structure (section \ref{sec:bridge}). We might have to lend more time to found relevant pieces of the design where the changes could increase its quality. This, accompanied by a design document explaining the benefits as Julie recommended us, could justify our effort.
+
+Another possibility that we did not investigate, but could also be interesting, is looking for parts of the application where the use of Property Based Testing is possible. The use of this type of techniques would increase the confidence in the test results.

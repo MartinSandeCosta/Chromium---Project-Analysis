@@ -1,0 +1,58 @@
+\chapter{Interview with Julie Jeongeun Kim}
+\label{chap:interview}
+
+Following the analysis of Chromium's IPC component we exchanged a few emails with someone involved firsthand with the project. 
+
+Julie Jeongeun Kim, software engineer at Igalia, is an avid contributor to this project. This is reflected in the GitHub repository, where the commits made by this person were numerous and the most recent, which lead us to exchange a series of emails. This sequence of emails lead to an interview that can be seen in the coming fragment \footnote{The publication of this conversation was explicitly authorized by Julie in one of our email conversations}: 
+
+
+\begin{description}
+
+\item[Question.] \textbf{What were your first experiences when you started contributing in Chromium? How did you deal with the overwhelming amount of code and information?}
+
+\item[Answer.] At first, even though I thought it would be amazing that I could contribute something to Chromium, I didn't know where I could start. So, I started to look into the part that I'm aware of among browser modules but it was not easy to find something I could contribute because sometimes it's already mature or had some other plan for refactoring. As I expanded the area I looked into, I found some modules I could start working with. I think once you start contributing, it can naturally make you keep going because it may need another follow-up or help you find something related.
+
+As you mentioned, Chromium is such a huge project and I can not say that I'm fully aware of it even though I worked on it for several years. In order to help people understand Chromium and share information with people, Chromium has many documents to describe how it works. Since I'm  the type of person who needs to understand a whole picture before starting something, I followed the documents and some code that I thought it's important. It was very helpful to understand Chromium. As Chromium is evolving, I still revisit the document site.
+\bigbreak \bigbreak
+\end{description}
+
+\question{What would be your first recommendations to someone who is getting into open software projects of great caliber like Chromium?}
+
+\answer{Almost all opensource communities like Chromium support an introduction document to help people start to contribute and have some rules such as coding style guide line, how to use tools or review process. I think it's important to respect them. We could just treat them as nothing and might think the complexity of the patch could be crucial but it's truly important to follow the rules of the community. And then, the next is the nice communication with people and the quality of the patch. So, If you want to start opensource contribution, first visit the opensource community and read the documents they have.}
+
+\question{Do you think that it is necessary to have some heavy background knowledge in specific topics such as Data Structures or Software Design in order to start contributing?}
+
+\answer{If you majored in Computer Science, I think you have already enough knowledge about it. Even though you didn't major in Computer Science, it's not a blocker because you could get all the information required for contribution through the community or various web sites. I think it would be great to have knowledge of Data Structures and Design patterns.}
+
+\question{ We were assigned to propose a new design alternative for any component we saw fit. In the IPC components analysis we saw that it was a convention to use ``\texttt{ifdef}" statements for specifying the different method implementation for each platform as can be seen in the following extract of the ``\texttt{ipc\_logging.cc}" file:}
+
+\begin{lstlisting}
+[...Logging::Logging()...]
+    #if defined(OS_WIN)
+        [...]
+    #else  // !defined(OS_WIN)
+        [...]
+    #endif  //defined(OS_WIN)
+[...]
+\end{lstlisting}
+
+\begin{description}
+    \item[] \textbf{We were thinking about using a bridge pattern to decouple the abstraction from its implementation so that the two can vary independently. Do you think this is something that would contribute in some beneficial way to the project?}
+\end{description}
+
+\answer{It's easy to find '\#ifdef' from Chromium code since it supports various platforms such as Linux, Windows, Androids, Mac and so on. So, some classes such as \texttt{SurfaceFactoryOzone} \footnote{\url{https://source.chromium.org/chromium/chromium/src/+/master:ui/ozone/platform/windows/ozone_platform_windows.cc;l=53?q=GetSurfaceFactoryOzone}} or \texttt{DesktopWindowTreeHost} \footnote{\url{https://source.chromium.org/chromium/chromium/src/+/master:ui/views/widget/desktop_aura/desktop_window_tree_host_win.cc;l=1115}} has abstraction. In the case of \texttt{IPC::Logging}, I think it depends on how the communication goes with the module OWNERS. From my experience so far, it tends to have a separate file when it has over some amount of code which depends on each platform.
+
+The contribution of making it clear or improvement for the structure is valuable. The thing is, you should remember to make people understand why that change is important and what we could benefit from it. So,
+people who want to change the structure sometimes write a design document and share it with module OWNERs and people interested in the change.
+}
+
+\question{On the same subject, what other alternative do you think would enhance or help enhance Chromium's IPC design?}
+
+\answer{Chromium switched legacy IPC to mojo \footnote{\url{https://chromium.googlesource.com/chromium/src.git/+/51.0.2704.48/docs/mojo_in_chromium.md}} several years ago for inter-process communication. So, if you're specifically interested in IPC module, you might follow mojo interfaces. Even though mojo is a new technique, it keeps evolving to improve design or functionality. You might be aware of the issue lists \footnote{\url{https://bugs.chromium.org/p/chromium/issues/list?can=2&q=component\%3AInternals\%3ECore&num=100&start=0}} \footnote{\url{https://bugs.chromium.org/p/chromium/issues/list?q=component:Internals\%3EMojo}} which is related to Core including IPC and Mojo. It would be also great to look through what's going on through the issue list.
+}
+
+\question{We are greatly thankful for your attention. We found that this is a very interesting project and after our analysis we might even consider the possibility to start contributing with the application.}
+    
+\answer{Sounds great. It would be great to see your change on Chromium.}
+
+As we already expressed to Julie in the interview, we are greatly thankful for this opportunity where we not only cleared some of our concerns but also increased our motivation in getting involved in the project.

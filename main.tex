@@ -1,0 +1,108 @@
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[11pt, twoside, openright]{report}
+
+\usepackage[T1]{fontenc}
+\usepackage{titlesec, blindtext, color}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\usepackage[utf8]{inputenc}
+\usepackage{ragged2e} 
+\usepackage{mathpazo}
+\usepackage[a4paper, total={6in, 8in}]{geometry}
+\usepackage{lscape}
+\usepackage{float} 
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{caption}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{hyperref}
+\usepackage{dirtree}
+\usepackage{listings}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{makecell}
+\usepackage{rotating}
+\usepackage{appendix}
+\usepackage{pdfpages}
+\usepackage{epigraph}
+\usepackage[htt]{hyphenat}
+
+\definecolor{gray75}{gray}{0.75}
+\titleformat{\chapter}[hang]{\Huge\bfseries}{\thechapter\hsp\textcolor{gray75}{|}\hsp}{0pt}{\Huge\bfseries}
+\setlist[description]{leftmargin=\parindent,labelindent=\parindent}
+\epigraphsize{\small\itshape}
+\setlength\epigraphwidth{8cm}
+\setlength\epigraphrule{0pt}
+
+% New commands
+\newcommand{\hsp}{\hspace{20pt}}
+\newcommand{\blankpage}{\mbox{}\thispagestyle{empty}\clearpage}
+\newcommand{\question}[1]{\begin{description} \item[Q.] \textbf{#1} \end{description}}
+\newcommand{\answer}[1]{\begin{description} \item[A.] #1 \end{description} \bigbreak \bigbreak}
+
+% New environments
+\newenvironment{titlemize}[1]{%
+  \paragraph{#1}
+  \begin{itemize}}
+  {\end{itemize}}
+\newenvironment{myepigraph}[3]{\epigraph{\textit{``#1"}}{--- \textup{#2}, #3}}
+
+\makeindex
+ 
+\lstset{
+  basicstyle=\ttfamily\footnotesize,
+  breakatwhitespace=true,           
+  breaklines=true,
+  captionpos=b,
+  commentstyle=\color{gray},
+  frame=single,
+  keepspaces=true,
+  keywordstyle=\color{blue},
+  linewidth=0.95\textwidth,
+  numberstyle=\tiny\color{gray}, 
+  rulecolor=\color{black},           
+  showspaces=false,                 
+  showstringspaces=false,          
+  showtabs=false,                  
+  stepnumber=1,                     
+  stringstyle=\color{Green},      
+  tabsize=2,	                     
+  xleftmargin=0.05\textwidth        
+}  
+%--------------- DOCUMENT --------------
+\begin{document}
+%--------------- TITLEPAGE --------------
+\include{titlepage/titlepage}
+%--------------- INDEX --------------
+\blankpage
+\addtocontents{toc}{\vspace{-1cm}}
+\pagenumbering{roman}
+\setcounter{page}{1}
+\tableofcontents
+\newpage
+\blankpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+% -----------------------BODY----------------------
+\include{content/introduction}
+\include{content/methodology}
+\include{content/architecture}
+\include{content/design}
+\include{content/quality}
+\include{content/accessibility}
+\include{content/interview} 
+\include{content/conclusions}
+% -----------------------BIBLIOGRAPHY----------------------
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography/references}
+\cleardoublepage
+% -----------------------APPENDICES----------------------
+\appendix
+\appendixpage
+\include{appendices/ipcuml}
+
+\end{document}
+

@@ -1,0 +1,105 @@
+\chapter{Status of the accessibility in the project}
+\label{chap:accessibility}
+
+Accessibility \cite{accessibility} often involves some design principles like using appropriate font sizes and color contrast and providing keyboard alternatives for those actions that are normally accomplished with a pointing device. In this case, Chromium codes its accessibility mechanisms oriented to offer full access to its UI via external accessibility APIs that can be used by assistive technology. Some examples of assistive technologies that Chromium consider are:
+\begin{itemize}
+    \item Screen readers.
+    \item Voice control applications.
+    \item Switch Access.
+    \item Magnifiers.
+    \item Assistive learning and literacy software.
+\end{itemize}
+
+These APIs also offer the possibility of running automated test scripts since they provide a convenient and universal way to control the application.
+
+Accessibility is a very important part of a web browser like Chromium, where it is not only necessary to provide access to the UI but also to the content of the web. In order to accomplish this, Chromium needs to support all the operating system and vendor-specific accessibility APIs.
+
+
+\section{Accessibility concepts}
+
+While accessibility APIs are platform-specific, there are some concepts all of them share.
+\begin{enumerate}
+    \item The Accesibility Tree.
+    \item Events.
+    \item Actions.
+\end{enumerate}
+
+\subsection{The Accessibility Tree and Accesibility Attributes}
+
+Consider an HTML file like this:
+\begin{lstlisting}[language=html]
+<html>
+<head>
+  <title>How old are you?</title>
+</head>
+<body>
+  <label for="age">Age</label>
+  <input id="age" type="number" name="age" value="42">
+  <div>
+    <button>Back</button>
+    <button>Next</button>
+  </div>
+</body>
+</html>
+\end{lstlisting}
+
+Chromium represents the accessibility tree for that web page using a data structure similar to this:
+\begin{lstlisting}[otherkeywords={id,role,name,labelledByIds,value}, language=html]
+id=1 role=WebArea name="How old are you?"
+    id=2 role=Label name="Age"
+    id=3 role=TextField labelledByIds=[2] value="42"
+    id=4 role=Group
+        id=5 role=Button name="Back"
+        id=6 role=Button name="Next"
+\end{lstlisting}
+
+These tree structure resembles a slightly simplified version of the HTML structure. Each node has an ID and a role. Additionally, some nodes have other properties like \texttt{name}, \texttt{value} or \texttt{labelledByIds}. 
+
+These nodes are implemented in a different way depending on the platform. This induces some differences between the interfaces but the underlying concepts keep the same.
+
+\subsection{Accessibility Events}
+
+For Chromium project, an Accessibility Event represents communication from the app to the assistive technology, indicating that the Accessibilty Tree changed. For example, when a text field becomes focused, Chromium would fire a ``focus" Accessibility Event that assistive technology could listen to.
+
+As nodes of the Accessibility Tree, each platform has its own API for accessibility events. Again, these differences are just details in the implementation, but keeping the key concepts where the accessibility relies the same.
+
+\subsection{Accessibility Actions}
+
+Unlike the events, Accessibility Actions are requests from the assistive technology to control or change the UI. This actions are supported by a native object that implements a platform's native accessibility API. For example, an user could use a voice control application for ``clicking" the \texttt{next} button on the interface. The voice control application recognizes the text from the user's speech, which enables the app to execute the action of clicking the button.
+
+\subsection{Parameterized attributes}
+
+In adition to the aforementioned accesibility attributes, events and actions, native accessibility APIs often have so-called ``parametrized attributes". 
+
+One example of parameterized attribute would be a function to retrieve the bounding box for a range of text. These kind of attributes are particulary tricky to implement because the Chromium's multi-process architecture, as we saw in section \ref{sec:plugin}. This multi-process architecture makes impossible to implement accessibility APIs the same way that a single-process can \footnote{This is by calling directly into the DOM to compute the result of each API call.}. That implementation require blocking the main thread while waiting for a response from the renderer process that implements that web page's DOM. Instead, Chromium takes an approach where a representation of the entire accessibility tree is cached in the main process.
+
+
+\section{Chromium accessibility APIs support}
+
+Current APIs supported by Chromium can be seen in the following table:
+
+\begin{center}
+\begin{tabular}{cl}
+\hline
+\textbf{Windows}  & \begin{tabular}[c]{@{}l@{}}MSAA/IAccessible (complete)\\ IAccessible2 (mostly complete)\\ SimpleDOM (mostly complete)\\ IAccessibleEx and UI Automation (very limited)\end{tabular} \\ \hline
+\textbf{Mac OS X} & NSAccessibility (mostly complete) \\ \hline
+\textbf{Linux}    & ATK (very limited)\\ \hline
+\end{tabular}
+\end{center}
+
+
+\section{Accessibility for Chromium Developers}
+
+The official documentation includes some guidelines to ensure accessibility when developing code for Chromium project. Some of the accessibility features that these guidelines encourage are:
+\begin{itemize}
+    \item Full keyboard accessibility.
+    \item Support for large fonts and very high zoom levels.
+    \item Support for screen readers for blind users.
+    \item Support for magnifiers for low-vision users.
+    \item Support for high-contrast modes for low-vision users.
+    \item Support for voice-control software for users who cannot type.
+\end{itemize}
+
+In addition, there is more specific information about accessibility guidelines and implementation details for different parts and platforms such as Windows, Mac, Linux, Views, HTML and WebKit/Blink.
+
+The importance of this subject inside the project is reflected in the amount of documentation dedicated to this topic. This documentation goes from general accessibility guidelines to more specific details like Keyboard Access support, Low-Vision support or Assistive Technology support. These three key areas, are considered the main goals of Chromium accessibility section.

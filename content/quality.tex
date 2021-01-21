@@ -1,0 +1,170 @@
+\chapter{Software Quality}
+\label{chap:quality}
+
+\section{Metrics}
+
+\subsection{Cohesion, coupling and connascence}
+
+The three concepts are very related and can hint at ways to improve the quality of the software. Coupling measures how closely connected two routines or modules are. On the other hand, cohesion refers to the degree to which the elements inside a module belong together. Low coupling often correlates with high cohesion, and vice versa. Low coupling is often a sign of a well-structured computer system and a good design, and when combined with high cohesion, supports the general goals of high readability and maintainability. For this matter we are focusing in Chromium's IPC as we did in the prior section. From this standpoint we found several design patterns that help maintain loosely coupled components as well as highly coherent units.
+
+Connascence allows reasoning about the complexity caused by dependency relationships. Two components are connascent if a change in one would require the other to be modified in order to maintain the overall correctness of the system. In parallel with the aforementioned, design patterns and the underlying idea of SOLID principles applied within the project's development assure minimum levels of connascence between components.
+
+\subsection{Success metrics}
+
+Any contributor should list what metrics will be used to measure the success of the new feature or change. This could be a mix of existing and new metrics. If they are new metrics, an explanation of how they will work must also be attached. If the new feature or change aims to improve performance, its impact must be measured on one of the speed launch metrics:
+\begin{itemize}
+    \item Loading
+        \begin{itemize}
+            \item Time To First Paint (FP)
+            \item Time To First Contentful Paint (FCP)
+            \item First Input Delay (FID) / Time to Interactive (TTI)
+        \end{itemize}
+    \item Animations
+        \begin{itemize}
+            \item Touch Scroll Start Latency (SSL)
+            \item Touch Scroll Update Latency (SUL)
+            \item Frame Throughput
+        \end{itemize}
+    \item Responsiveness
+        \begin{itemize}
+            \item PageLoad.InteractiveTiming.InputDelay3
+        \end{itemize}
+    \item Power
+        \begin{itemize}
+            \item Thread Times
+        \end{itemize}
+    \item Memory
+        \begin{itemize}
+            \item Browser and Renderer Memory Use
+            \item OOMs
+        \end{itemize}
+    \item Browser UI
+        \begin{itemize}
+            \item Session Restore
+            \item Startup
+            \item Omnibox Latency
+            \item Responsiveness
+            \item Tab Switching
+        \end{itemize}
+    \item Data Use
+        \begin{itemize}
+            \item Traffic Size
+        \end{itemize}
+    \item Binary Size
+\end{itemize}
+
+
+\section{Documentation}
+
+Since this is an open source project supported by thousands of contributors, the documentation is an essential part in the software development process. In this case, Chromium has an incredible amount of documentation that covers different areas such as development guides, good practices, design documents or testing and infrastructure documents.
+
+The documentation of the project is written above Markdown files, which ones have to follow Google's style guide. When this documents are commited and reviewed, the gitiles tool is used to render HTML files from this Markdown documents. This pipeline automates the process of maintaining a web-style documentation.
+
+The style of the design documentation is not oriented to maintain a bunch of UML diagrams (which would be very difficult given the high activity presented by the project) but to manage a textual document (which often includes some diagrams but not UML) with the following structure:
+\begin{itemize}
+    \item One page overview
+        \begin{itemize}
+            \item Summary
+            \item Platforms
+            \item Team
+            \item Bug
+            \item Code affected
+        \end{itemize}
+    \item Design
+    \item Metrics
+        \begin{itemize}
+            \item Success metrics
+            \item Regression metrics
+            \item Experiments
+        \end{itemize}
+    \item Rollout plan
+    \item Core principle considerations
+        \begin{itemize}
+            \item Speed
+            \item Security
+        \end{itemize}
+    \item Privacy considerations
+    \item Testing plan
+    \item Followup work
+\end{itemize}
+
+
+\section{Testing}
+
+Chromium development is heavily test driven. In order to maintain a rapid rate of development across multiple platforms and an ever increasing set of features, it is imperative that test suites be updated, maintained, executed, and evolved. Contributors are expected to write quality tests that provide ample code coverage. The Chromium Continuous Integration system is employed to run these tests 24x7. 
+
+\subsection{Web testing}
+
+In general, web tests involve loading pages in a test renderer and comparing the rendered output or JavaScript output against an expected output file. Blink has a large suite of tests that typically verify a page is laid out properly.  Chromium developers use them to verify much of the code that runs within a Chromium renderer.
+
+\subsection{Unit and browser tests}
+
+Most top-level directories of src/ have a unit test build target. Unit tests verify some part of the chromium code base in an isolated test environment, and are usually found in files with a \_unittest.cc suffix. 
+
+Browser tests are the framework used for integration tests of Chromium. As the name implies, they run inside the browser process. The test code runs after browser process initialization and after a window has been created. Each test runs in a new browser process, to avoid tests impacting each other.
+Browser tests run a full browser, and then execute a test inside the browser instance, and are usually found in files with a \_browsertest.cc suffix. 
+
+\subsection{GPU testing}
+
+GPU bots run a different set of tests than the majority of the Chromium test machines. Their main goal, is to specifically focus on tests which verify the correctness of Chrome's graphically accelerated rendering pipeline.
+
+Most of the tests on the GPU bots are run via the Telemetry framework. Telemetry was originally conceived as a performance testing framework, but has proven valuable for correctness testing as well. Telemetry directs the browser to perform various operations, like page navigation and test execution, from external scripts written in Python. 
+
+\subsection{Non-functional testing}
+
+\subsubsection{Benchmarking}
+Inside the Chromium's project, there is a group of developers known as Speed Metrics Team formed by area domain experts, focused metrics teams, devtools folks and ocassionally other experts. Whose mission is, as exposed in \cite{bench}:
+
+\textit{``Quantify users' experience of the web to provide Chrome engineers and web developers the metrics, insights, and incentives they need to improve it."}
+
+Their main tasks can be grouped in the following:
+\begin{itemize}
+    \item Quantify web UX via a high quality set of UX metrics which Chrome devs align on.
+    \item Expose these metrics consistently to Chrome and Web devs, in the lab and the wild.
+    \item Analyze these metrics, producing actionable reports driving our UX efforts.
+\end{itemize}
+This group is also responsible for ensuring that the core metrics are easy to expose and are exposed effectively. They also perform detailed analysis on key metrics and breakdown metrics, providing actionable reports on how Chrome performs in the lab and in the wild. These reports can then be used to guide regular decision making processes.
+
+\subsubsection{Reliability tests}
+The reliability bots have been providing no real results for long periods of time and are classified as deprecated as of 2019. 
+
+The Chromium Buildbot runs a large scale set of tests called the distributed reliability tests. The reliability tests use a set of criteria to determine whether or not the build should fail. When a new crash occurs during a test, its crash dump is analyzed and a stack trace is produced for the functions that were on the stack at the point of the crash.  This stack trace is compared against a list of known crashes.  If none of the crashes in the known crashes list match the crash, the crash is considered new and the build will fail. Crash stacks for the same crash may change or have minor variants, causing them not to match any known crash and be incorrectly reported as new.  In other words, false positives are possible. 
+
+
+\section{Four S}
+
+In conclusion, the four major axis of non functional quality in Chromium are known as the four S:
+\begin{description}
+\item[Speed] Close attention to automated tests for speed of: rich web, page display and user interactions. 
+\item[Security] Protections for users at multiple levels: sandboxed code, Safe Browsing, understandable context as well as automatical updates.
+\item[Stability] Separate individual tabs and plugins into their own processes, using as many automated tests as possible.
+\item[Simplicity] Simple user experience. Content, not Chromium.
+    \begin{itemize}
+        \item Optimal user interactions.
+        \item Up-to-date software.
+        \item Minimal user interruption.
+    \end{itemize}
+\end{description}
+
+
+\section{Proposed alternatives}
+
+\subsection{Alternative metrics}
+
+\subsubsection{User satisfaction}
+A widely used and respected metric is user satisfaction. It is a measure of how a service supplied meets or surpasses user expectation. User satisfaction is defined as the number of customers, or percentage of total customers, whose reported experience exceeds specified satisfaction goals.
+
+\subsubsection{Halstead complexity}
+This metric measures how independent the implementation of different algorithms are from their execution on a specific platform.
+
+\subsection{Alternative documentation methods}
+
+We believe that the current documentation model is really efficient given the size of the project. We do not see viable documentation based on diagrams and models since they would be really difficult to maintain. However, we believe in the possibility of providing diagrams and models for documentation related to higher level aspects such as architecture.
+
+\subsection{Alternative testing}
+
+\subsubsection{Property based testing}
+Without going into too much detail, we have seen that it may make sense to use Property Based Testing tools such as RapidCheck \cite{rapidcheck}, for automatic and pseudo-random generation of test values. In addition, we assume the possibility of creating test models based on Finite State Machines that allow validating execution flows of application components, evaluating a series of post-conditions to be fulfilled when an action is executed.
+
+\subsubsection{Formal Verification}
+Since we did not deepen into concrete algorithms for complex computation issues (instead we looked upon high abstractions) we can not define or propose a formal property upon which build a proper formal verification.
